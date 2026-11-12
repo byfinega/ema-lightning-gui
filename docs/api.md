@@ -4,12 +4,16 @@
 from ema_lightning import EMA, Speech
 ```
 
-## `EMA(device="auto")`
+## `EMA(device="auto", weights=None)`
 
-Loads the acoustic model and the decoder. The weights (`ema.pt`, `decoder.pt`)
-are downloaded from `canberkkkkkk/ema-lightning` on Hugging Face on first use and
-cached by `huggingface_hub`. `device="auto"` picks CUDA when it is available,
-otherwise the CPU; any `torch.device` string works.
+Loads the acoustic model and the decoder. By default the weights (`ema.pt`,
+`decoder.pt`) are downloaded from `canberkkkkkk/ema-lightning` on Hugging Face on
+first use and cached by `huggingface_hub`. `device="auto"` picks CUDA when it is
+available, otherwise the CPU; any `torch.device` string works.
+
+`weights` may point to a folder that already holds `ema.pt` and `decoder.pt`, in
+which case nothing is downloaded. The desktop app uses this for its bundled
+weights. A missing file raises `FileNotFoundError`.
 
 Reuse one `EMA` for the whole process.
 

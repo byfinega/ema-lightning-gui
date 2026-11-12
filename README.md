@@ -4,6 +4,11 @@
 Apache-2.0. It runs on your own GPU or CPU, offline: no text or audio leaves the
 machine.
 
+> Bu depo, [canberk7/ema-lightning](https://github.com/canberk7/ema-lightning) projesinin
+> üzerine bir masaüstü arayüzü ekleyen fork'tur. Kütüphane bölümü orijinal projeden
+> gelir; arayüz ve tasarım: [@byfinega](https://github.com/byfinega) — ayrıntılar için
+> [EMA Lightning Desktop GUI](#ema-lightning-desktop-gui) bölümüne bakın.
+
 - **The most accurate on Freya-TR-Eval:** 0.92% word error rate, the lowest of every
   system measured, including ElevenLabs v4, Gemini 3.8 and the 2.38B-parameter
   Trendyol-TTS.
@@ -198,6 +203,35 @@ the same, just slower.
 
 Any text is accepted, and text never raises. Invalid settings raise `ValueError`
 before any work starts.
+
+## EMA Lightning Desktop GUI
+
+<img src="docs/desktop.png" alt="EMA Lightning Desktop GUI" width="720">
+
+A small Tkinter window is included: write Turkish text, choose the speed and the
+voice, listen, and save a WAV. It runs the model in a worker thread, remembers the
+theme and settings, and works offline once the weights are cached.
+
+The voice menu offers the model's own voice plus a lighter `İnce` variant. The model has
+one speaker, so `İnce` resamples the same voice to move pitch and formants
+together; it is not a second recorded speaker. See
+[the desktop guide](docs/desktop.md#ses-seçenekleri) for what it does.
+
+```sh
+python -m pip install -e ".[dev]"
+python -m ema_lightning
+```
+
+Build a Windows executable with PyInstaller:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File scripts\build_exe.ps1
+```
+
+The default folder build is `dist\EMA-Lightning-Desktop-GUI\EMA-Lightning-Desktop-GUI.exe`. Add
+`-OneFile` for a single file, `-WithWeights` to bundle the weights for offline
+first use, or `-Cuda` for a CUDA build. See [the desktop guide](docs/desktop.md)
+for details, output sizes and troubleshooting.
 
 ## Playhead: how one model serves many callers
 

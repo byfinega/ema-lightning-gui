@@ -42,6 +42,9 @@ weights, no network and no GPU. GPU tests run only when CUDA is available.
 | `decoder.py` | The decoder from latents to 48 kHz audio |
 | `graphs.py` | Compilation and CUDA graphs for `lightning()`: the batch-size ladder and the length buckets |
 | `audio.py` | Resampling and WAV writing |
+| `gui.py` | EMA Lightning Desktop GUI: layout, background work, playback and settings |
+| `voice.py` | The desktop app's voice presets and the pitch shift behind them |
+| `packaging/`, `scripts/` | PyInstaller entry point, spec, icon and the `build_exe.ps1` script |
 
 Language rules belong in normalizer-tr, not here. `frontend.py` only cleans, calls
 it and maps to the alphabet.
@@ -80,6 +83,8 @@ python -m pytest -q
 | `test_chunker.py` | Cutting text into sentences and clauses, with pauses |
 | `test_frontend.py` | Cleaning, normalizer-tr with the fallback policy, the alphabet |
 | `test_audio.py` | Resampling and WAV writing |
+| `test_gui.py` | GUI helpers, settings persistence, and a headless-friendly window build. Skipped without a display |
+| `test_voice.py` | The voice presets: unique keys and labels, the pitch shift's spectrum and its duration guarantee |
 | `test_gpu.py` | `lightning()` on a real GPU: graphs against the plain path, streams and lists, benchmark mode. Skipped without CUDA |
 
 On a GPU, run `benches/callers.py` after any change to `scheduler.py`.

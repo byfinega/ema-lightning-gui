@@ -1,5 +1,22 @@
 # Changelog
 
+## Unreleased
+
+- A desktop app on top of the library: a small Tkinter window to write Turkish
+  text, choose the speed, the voice, the sample rate and an optional seed, listen
+  and save a WAV. The model loads and runs in a worker thread, so the window never
+  blocks; the theme and settings persist. Run it with `python -m ema_lightning`
+  or the `ema-lightning-desktop` command. A PyInstaller recipe builds a Windows
+  executable (`scripts/build_exe.ps1`); see [the desktop guide](docs/desktop.md).
+- `EMA(weights=...)` loads `ema.pt` and `decoder.pt` from a local folder instead
+  of the Hub, so the desktop app can start with bundled weights and no network.
+  A missing file raises `FileNotFoundError`.
+- The desktop app has a voice menu: the model's own voice, and an `İnce` variant
+  about two semitones higher. The model stays single-speaker; the variant
+  resamples the same voice to move pitch and formants together, and the model is
+  asked for slightly slower speech so the duration still matches the speed slider
+  (`ema_lightning.voice`).
+
 ## 1.1.2
 
 - Text frontend on normalizer-tr 0.6. Brand names keep their reading with

@@ -1,9 +1,33 @@
+# Derleme çıktıları — GitHub'a yüklenmez
+build/
+dist/
+*.exe
+*.pkg
+
+# Yerel paylaşım kopyası — depoya girmez
+desktop_app/
+
+# Python önbellekleri
 __pycache__/
 *.py[cod]
 .pytest_cache/
 .ruff_cache/
-build/
-dist/
+.mypy_cache/
+
+# Sanal ortamlar
+.venv/
+.venv-build/
+.env
+
+# Ağırlıklar ve paket kalıntıları
+weights/
 *.egg-info/
+*.egg-link
+
+# Diğer
 *.wav
+*.log
 .DS_Store
+*.swp
+*.swo
+*~

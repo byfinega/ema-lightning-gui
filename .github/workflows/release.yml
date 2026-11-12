@@ -44,7 +44,8 @@ jobs:
 
   pypi:
     name: Upload to PyPI
-    if: github.event_name == 'release'
+    # PyPI yayını yalnızca orijinal depoya aittir; fork'larda bu iş atlanır.
+    if: github.event_name == 'release' && github.repository == 'canberk7/ema-lightning'
     needs: build
     runs-on: ubuntu-24.04
     environment:
@@ -61,8 +62,9 @@ jobs:
 
   attach:
     name: Attach the files to the GitHub release
+    # Fork'larda pypi işi atlanır; artefaktlar doğrudan build'den release'e eklenir.
     if: github.event_name == 'release'
-    needs: pypi
+    needs: build
     runs-on: ubuntu-24.04
     permissions:
       contents: write

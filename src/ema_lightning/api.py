@@ -58,14 +58,24 @@ class Speech:
 
 
 class EMA:
-    def __init__(self, device="auto"):
+    def __init__(self, device="auto", weights=None):
+        """Load the model from the Hub, or from a folder that holds `ema.pt` and `decoder.pt`."""
         device = torch.device(("cuda" if torch.cuda.is_available() else "cpu") if device == "auto" else device)
-        try:  # the Hub counts a download each time config.json is requested; nothing here depends on it
-            hf_hub_download(REPO, "config.json")
-        except Exception:
-            pass
-        model = load_acoustic(hf_hub_download(REPO, "ema.pt"), device)
-        decoder = load_decoder(hf_hub_download(REPO, "decoder.pt"), device)
+        if weights is None:
+            try:  # the Hub counts a download each time config.json is requested; nothing here depends on it
+                hf_hub_download(REPO, "config.json")
+            except Exception:
+                pass
+            model = load_acoustic(hf_hub_download(REPO, "ema.pt"), device)
+            decoder = load_decoder(hf_hub_download(REPO, "decoder.pt"), device)
+        else:
+            folder = Path(weights)
+            model_path, decoder_path = folder / "ema.pt", folder / "decoder.pt"
+            missing = [path.name for path in (model_path, decoder_path) if not path.is_file()]
+            if missing:
+                raise FileNotFoundError(f"model files missing in {folder}: {', '.join(missing)}")
+            model = load_acoustic(model_path, device)
+            decoder = load_decoder(decoder_path, device)
         self._setup(model, decoder, Frontend(model.vocab), device)
 
     @classmethod

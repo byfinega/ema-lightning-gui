@@ -155,6 +155,28 @@ def test_best_batch_size_is_measured_once(tts, monkeypatch):
     assert tts.best_batch_size() == size
 
 
+def test_ema_loads_local_weights_without_the_hub(tmp_path, monkeypatch):
+    from conftest import tiny_decoder, tiny_model
+
+    import ema_lightning.api as api
+
+    (tmp_path / "ema.pt").write_bytes(b"placeholder")
+    (tmp_path / "decoder.pt").write_bytes(b"placeholder")
+    monkeypatch.setattr(api, "load_acoustic", lambda path, device: tiny_model(False))
+    monkeypatch.setattr(api, "load_decoder", lambda path, device: tiny_decoder())
+    monkeypatch.setattr(api, "hf_hub_download", lambda *args, **kwargs: pytest.fail("network used"))
+    tts = api.EMA(device="cpu", weights=tmp_path)
+    assert tts.say("Merhaba.", seed=0).audio.size > 0
+
+
+def test_ema_reports_missing_local_weights(tmp_path):
+    from ema_lightning import EMA
+
+    (tmp_path / "ema.pt").write_bytes(b"placeholder")
+    with pytest.raises(FileNotFoundError, match="decoder.pt"):
+        EMA(device="cpu", weights=tmp_path)
+
+
 def test_loading_requests_config_json_and_survives_without_it(monkeypatch):
     from conftest import tiny_decoder, tiny_model
 
